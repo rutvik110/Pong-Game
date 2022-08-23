@@ -1,7 +1,9 @@
 import 'dart:developer';
 
-import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:pong/balls.dart';
+import 'package:flame/collisions.dart';
+import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import 'package:pong/player_bar.dart';
 
 enum BoundarySide {
   top,
@@ -10,9 +12,9 @@ enum BoundarySide {
   right,
 }
 
-List<Wall> createBoundaries(Forge2DGame game) {
+List<Wall> createBoundaries(FlameGame game) {
   final topLeft = Vector2.zero();
-  final bottomRight = game.screenToWorld(game.camera.viewport.effectiveSize);
+  final bottomRight = Vector2(game.size.x, game.size.y);
   final topRight = Vector2(bottomRight.x, topLeft.y);
   final bottomLeft = Vector2(topLeft.x, bottomRight.y);
 
@@ -34,7 +36,8 @@ List<Wall> createBoundaries(Forge2DGame game) {
   ];
 }
 
-class Wall extends BodyComponent with ContactCallbacks {
+class Wall extends PositionComponent
+    with HasGameRef<FlameGame>, CollisionCallbacks {
   final Vector2 start;
   final Vector2 end;
   final BoundarySide boundarySide;
@@ -48,37 +51,78 @@ class Wall extends BodyComponent with ContactCallbacks {
   ]);
 
   @override
-  Body createBody() {
-    late final EdgeShape shape;
-    late final FixtureDef fixtureDef;
-    late final BodyDef bodyDef;
+  Future<void>? onLoad() {
+    // TODO: implement onLoad
 
-    shape = EdgeShape()..set(start, end);
-    fixtureDef = FixtureDef(
-      shape,
-      friction: 0.3,
-      isSensor: isSensor,
-    );
-    bodyDef = BodyDef(
-      userData: this, // To be able to determine object in collision
-      position: Vector2.zero(),
-    );
+    final hitBox = RectangleHitbox(position: borderPosition, size: borderSize);
 
-    return world.createBody(bodyDef)..createFixture(fixtureDef);
+    add(hitBox);
+    return super.onLoad();
   }
 
-  @override
-  void beginContact(Object other, Contact contact) {
-    // TODO: implement beginContact
-    super.beginContact(other, contact);
-    if (other is Ball) {
-      //check which boundary i'm colliding with
-      if (isSensor) {
-        log("Ball Escaped");
-        other.removeFromParent();
-      } else {
-        other.giveNudge = false;
-      }
+  Vector2 get borderPosition {
+    switch (boundarySide) {
+      case BoundarySide.top:
+        return Vector2(0, 0);
+        break;
+      case BoundarySide.bottom:
+        return Vector2(0, gameRef.size.y - 20);
+        break;
+      case BoundarySide.left:
+        return Vector2(0, 0);
+        break;
+      case BoundarySide.right:
+        return Vector2(gameRef.size.x - 20, 0);
+        break;
+      default:
+        return Vector2(0, 0);
     }
+  }
+
+  Vector2 get borderSize {
+    switch (boundarySide) {
+      case BoundarySide.top:
+        return Vector2(gameRef.size.x, 20);
+        break;
+      case BoundarySide.bottom:
+        return Vector2(gameRef.size.x, 20);
+        break;
+      case BoundarySide.left:
+        return Vector2(20, gameRef.size.y);
+        break;
+      case BoundarySide.right:
+        return Vector2(20, gameRef.size.y);
+        break;
+      default:
+        return Vector2(0, 0);
+    }
+  }
+  // @override
+  // Body createBody() {
+  //   late final EdgeShape shape;
+  //   late final FixtureDef fixtureDef;
+  //   late final BodyDef bodyDef;
+
+  //   shape = EdgeShape()..set(start, end);
+  //   fixtureDef = FixtureDef(
+  //     shape,
+  //     friction: 0.3,
+  //     isSensor: isSensor,
+  //   );
+  //   bodyDef = BodyDef(
+  //     userData: this, // To be able to determine object in collision
+  //     position: Vector2.zero(),
+  //   );
+
+  //   return world.createBody(bodyDef)..createFixture(fixtureDef);
+  // }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    // TODO: implement onCollision
+    if (other is Paddle) {
+      log("Paddle Toched");
+    }
+    super.onCollision(intersectionPoints, other);
   }
 }
