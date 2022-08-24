@@ -1,33 +1,46 @@
+import 'dart:developer';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Paddle extends PositionComponent
     with HasGameRef<FlameGame>, CollisionCallbacks, KeyboardHandler {
   // Paddle({});
-  late final RectangleHitbox paddle;
+  late final RectangleHitbox paddleHitBox;
+  late final RectangleComponent paddle;
 
   @override
   Future<void>? onLoad() {
     // TODO: implement onLoad
-    paddle = RectangleHitbox(
-      position: Vector2(50, 50),
-      size: Vector2(20, 100),
+    final worldRect = gameRef.size.toRect();
+    log(worldRect.center.toString());
+    final size = Vector2(50, 200);
+    final center = Vector2(worldRect.center.dx, worldRect.center.dy);
+    paddle = RectangleComponent(
+        position: center, size: size, paint: Paint()..color = Colors.white);
+    paddleHitBox = RectangleHitbox(
+      position: center,
+      size: size,
     );
 
-    addAll([paddle]);
+    addAll([
+      paddle,
+      paddleHitBox,
+    ]);
 
     add(
       KeyboardListenerComponent(
         keyDown: {
           LogicalKeyboardKey.arrowDown: (keysPressed) {
-            position += Vector2(0, 5);
+            position += Vector2(0, 50);
 
             return true;
           },
           LogicalKeyboardKey.arrowUp: (keysPressed) {
-            position += Vector2(0, -5);
+            position += Vector2(0, -50);
 
             return true;
           },
@@ -37,6 +50,7 @@ class Paddle extends PositionComponent
     return super.onLoad();
   }
 }
+
 
 
 

@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
+import 'package:pong/balls.dart';
 import 'package:pong/boundaries.dart';
 import 'package:pong/player_bar.dart';
 
@@ -21,12 +22,9 @@ class CompositionExample extends FlameGame
   CompositionExample();
 
   @override
-  // TODO: implement debugMode
-  bool get debugMode => true;
-
-  @override
   Future<void> onLoad() async {
     //  final screenHitBox = ScreenHitbox();
+
     final boundaries = createBoundaries(this);
     boundaries.forEach(add);
 
@@ -36,7 +34,7 @@ class CompositionExample extends FlameGame
       [
         // screenHitBox,
         Paddle(),
-        //  Ball(viewportCenter),
+        Ball(viewportCenter),
       ],
     );
   }
