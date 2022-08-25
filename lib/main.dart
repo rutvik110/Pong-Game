@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pong/balls.dart';
 import 'package:pong/boundaries.dart';
 import 'package:pong/fieldline.dart';
@@ -61,5 +62,17 @@ class PongGame extends FlameGame
         Ball(Vector2(500, 10)),
       ],
     );
+  }
+
+  @override
+  @mustCallSuper
+  KeyEventResult onKeyEvent(
+    RawKeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    super.onKeyEvent(event, keysPressed);
+
+    // Return handled to prevent macOS noises.
+    return KeyEventResult.handled;
   }
 }
