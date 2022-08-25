@@ -1,3 +1,6 @@
+import 'dart:async' as dartAsync;
+import 'dart:math' as math;
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -66,6 +69,17 @@ class Ball extends CircleComponent
     return super.onLoad();
   }
 
+  void get _resetBall {
+    position = gameRef.size / 2;
+    final angle = math.Random().nextDouble() * math.pi * 2;
+    final vx = math.cos(angle) * 300;
+    final vy = math.sin(angle) * 300;
+    velocity = Vector2(
+      vx,
+      vy,
+    );
+  }
+
   @override
   void update(double dt) {
     super.update(dt);
@@ -79,20 +93,24 @@ class Ball extends CircleComponent
   ) {
     super.onCollisionStart(intersectionPoints, other);
     final collisionPoint = intersectionPoints.toList()[0];
-    late final double vx;
-    late final double vy;
+    double vx = velocity.x;
+    double vy = velocity.y;
 
     if (other is Wall) {
       final side = other.boundarySide;
 
       switch (side) {
         case BoundarySide.right:
-          vx = -velocity.x;
-          vy = velocity.y;
+          final timer = dartAsync.Timer(const Duration(seconds: 1), () {
+            _resetBall;
+          });
+
           break;
         case BoundarySide.left:
-          vx = -velocity.x;
-          vy = velocity.y;
+          final timer = dartAsync.Timer(const Duration(seconds: 1), () {
+            _resetBall;
+          });
+
           break;
         case BoundarySide.top:
           vx = velocity.x;

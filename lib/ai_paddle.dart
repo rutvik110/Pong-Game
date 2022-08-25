@@ -15,7 +15,7 @@ class AiPaddle extends PositionComponent
     final worldRect = gameRef.size.toRect();
 
     final size = Vector2(10, 100);
-    position = Vector2(200, 500);
+    position = Vector2(worldRect.width * 0.1, 500);
     paddle = RectangleComponent(
       size: size,
       paint: Paint()..color = Colors.red,

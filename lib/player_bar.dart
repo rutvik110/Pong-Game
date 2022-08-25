@@ -29,7 +29,7 @@ class Paddle extends PositionComponent
 
     final size = Vector2(10, 100);
     // position = Vector2(200, 200);
-    position.x = worldRect.width - 200;
+    position.x = worldRect.width * 0.9;
     paddle =
         RectangleComponent(size: size, paint: Paint()..color = Colors.white);
     paddleHitBox = RectangleHitbox(

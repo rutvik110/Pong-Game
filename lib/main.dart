@@ -25,7 +25,7 @@ class CompositionExample extends FlameGame
 
   @override
   // TODO: implement debugMode
-  bool get debugMode => false;
+  bool get debugMode => true;
 
   @override
   Future<void> onLoad() async {
@@ -41,7 +41,7 @@ class CompositionExample extends FlameGame
         // screenHitBox,
         Paddle(),
         AiPaddle(),
-        Ball(viewportCenter),
+        Ball(Vector2(500, 10)),
       ],
     );
   }
