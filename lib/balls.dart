@@ -1,11 +1,11 @@
 import 'dart:async' as dartAsync;
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pong/ai_paddle.dart';
 import 'package:pong/boundaries.dart';
@@ -23,7 +23,7 @@ class Ball extends CircleComponent
   Ball(this.velocity) {
     originalPaint = randomPaint();
     paint = originalPaint;
-    position = Vector2(100, 100);
+
     radius = 10;
   }
 
@@ -32,6 +32,7 @@ class Ball extends CircleComponent
 
   @override
   Future<void>? onLoad() {
+    _resetBall;
     final hitBox = CircleHitbox(
       radius: radius,
     );
@@ -70,10 +71,16 @@ class Ball extends CircleComponent
   }
 
   void get _resetBall {
+    final sideToThrow = math.Random().nextBool();
     position = gameRef.size / 2;
-    final angle = math.Random().nextDouble() * math.pi * 2;
-    final vx = math.cos(angle) * 300;
-    final vy = math.sin(angle) * 300;
+    final random = math.Random().nextDouble();
+    const degree = math.pi / 180;
+    final angle = sideToThrow
+        ? lerpDouble(-35, 35, random)!
+        : lerpDouble(145, 215, random)!;
+    //math.Random().nextDouble() * math.pi * 2;
+    final vx = math.cos(angle * degree) * 500;
+    final vy = math.sin(angle * degree) * 500;
     velocity = Vector2(
       vx,
       vy,
