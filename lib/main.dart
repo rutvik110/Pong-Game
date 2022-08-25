@@ -5,6 +5,8 @@ import 'package:pong/balls.dart';
 import 'package:pong/boundaries.dart';
 import 'package:pong/player_bar.dart';
 
+import 'ai_paddle.dart';
+
 void main() {
   final game = CompositionExample();
   runApp(GameWidget(game: game));
@@ -22,6 +24,10 @@ class CompositionExample extends FlameGame
   CompositionExample();
 
   @override
+  // TODO: implement debugMode
+  bool get debugMode => false;
+
+  @override
   Future<void> onLoad() async {
     //  final screenHitBox = ScreenHitbox();
 
@@ -34,6 +40,7 @@ class CompositionExample extends FlameGame
       [
         // screenHitBox,
         Paddle(),
+        AiPaddle(),
         Ball(viewportCenter),
       ],
     );

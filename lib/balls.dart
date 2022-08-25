@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pong/ai_paddle.dart';
 import 'package:pong/boundaries.dart';
 import 'package:pong/player_bar.dart';
 
@@ -15,25 +14,23 @@ class Ball extends CircleComponent
   bool giveNudge = false;
 
   Vector2 velocity;
-  // final double _timeSinceNudge = 0.0;
-  // static const double _minNudgeRest = 2.0;
+  final double _timeSinceNudge = 0.0;
+  static const double _minNudgeRest = 2.0;
 
   Ball(this.velocity) {
     originalPaint = randomPaint();
     paint = originalPaint;
     position = Vector2(100, 100);
-    radius = 50;
+    radius = 10;
   }
 
   Paint randomPaint() => PaintExtension.random(withAlpha: 0.9, base: 100);
-  late final CircleComponent ball;
   //late final MoveToEffect effect;
 
   @override
   Future<void>? onLoad() {
     final hitBox = CircleHitbox(
       radius: radius,
-      position: Vector2.zero(),
     );
 
     addAll([
@@ -81,13 +78,6 @@ class Ball extends CircleComponent
     PositionComponent other,
   ) {
     super.onCollisionStart(intersectionPoints, other);
-    //calculate the next point of position based on
-    // the intersection point and speed vector
-    // final ballVelocity = velocity;
-    // final impactNormal = Vector2(1, -2);
-
-    // final dotProduct =
-    //     ballVelocity.x * impactNormal.x + ballVelocity.y * impactNormal.y;
     final collisionPoint = intersectionPoints.toList()[0];
     late final double vx;
     late final double vy;
@@ -116,25 +106,35 @@ class Ball extends CircleComponent
       }
     }
 
+    // log(collisionPoint.y.toString());
+
     if (other is Paddle) {
-      final paddleRect = other.paddle.toRect();
-      final isLeftOrRight = (collisionPoint.x >= paddleRect.left &&
-              collisionPoint.x <= paddleRect.right) &&
-          !(collisionPoint.y > paddleRect.top &&
-              collisionPoint.y < paddleRect.bottom);
-      // final isTopOrBottom = collisionPoint.y >= paddleRect.top ||
-      //     collisionPoint.y <= paddleRect.top + paddleRect.height;
-
-      // final isTopOrBottom = collisionPoint.x >= paddleRect.top &&
-      //     collisionPoint.x <= paddleRect.top + paddleRect.width;
-
+      final paddleRect = other.paddle.toAbsoluteRect();
+      final isSide = (collisionPoint.x >= paddleRect.left &&
+          collisionPoint.x <= paddleRect.right);
+      final isUpBottom = (collisionPoint.y > other.paddle.y &&
+          collisionPoint.y < other.paddle.y + paddleRect.height);
+      final isLeftOrRight = isSide && !isUpBottom;
       if (isLeftOrRight) {
-        log("Left/Right + ${collisionPoint.toString()}");
         vx = -velocity.x;
         vy = velocity.y;
       } else {
-        log("Top/Bottom + ${collisionPoint.toString()}");
+        vx = velocity.x;
+        vy = -velocity.y;
+      }
+    }
 
+    if (other is AiPaddle) {
+      final paddleRect = other.paddle.toAbsoluteRect();
+      final isSide = (collisionPoint.x >= paddleRect.left &&
+          collisionPoint.x <= paddleRect.right);
+      final isUpBottom = (collisionPoint.y > other.paddle.y &&
+          collisionPoint.y < other.paddle.y + paddleRect.height);
+      final isLeftOrRight = isSide && !isUpBottom;
+      if (isLeftOrRight) {
+        vx = -velocity.x;
+        vy = velocity.y;
+      } else {
         vx = velocity.x;
         vy = -velocity.y;
       }
@@ -142,49 +142,4 @@ class Ball extends CircleComponent
 
     velocity = Vector2(vx, vy);
   }
-
-  // @override
-  // Body createBody() {
-  //   final shape = CircleShape();
-  //   shape.radius = radius;
-
-  //   final fixtureDef = FixtureDef(
-  //     shape,
-  //     restitution: 0.8,
-  //     density: 1.0,
-  //     friction: 0.4,
-  //   );
-
-  //   final bodyDef = BodyDef(
-  //     userData: this,
-  //     angularDamping: 0.8,
-  //     position: Vector2(10, 10),
-  //     type: BodyType.dynamic,
-  //   );
-
-  //   final fixture = world.createBody(bodyDef)..createFixture(fixtureDef);
-
-  //   fixture.applyLinearImpulse(Vector2(0, 50));
-
-  //   return fixture;
-  // }
-
-  // @override
-  // void beginContact(Object other, Contact contact) {
-  //   if (other is Wall) {
-  //     other.paint = paint;
-  //   }
-
-  //   // if (other is WhiteBall) {
-  //   //   return;
-  //   // }
-
-  //   if (other is Ball) {
-  //     if (paint != originalPaint) {
-  //       paint = other.paint;
-  //     } else {
-  //       other.paint = paint;
-  //     }
-  //   }
-  // }
 }

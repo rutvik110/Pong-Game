@@ -66,13 +66,13 @@ class Wall extends PositionComponent
         return Vector2(0, 0);
         break;
       case BoundarySide.bottom:
-        return Vector2(0, gameRef.size.y - 20);
+        return Vector2(0, gameRef.size.y - 1);
         break;
       case BoundarySide.left:
         return Vector2(0, 0);
         break;
       case BoundarySide.right:
-        return Vector2(gameRef.size.x - 20, 0);
+        return Vector2(gameRef.size.x - 1, 0);
         break;
       default:
         return Vector2(0, 0);
@@ -82,16 +82,16 @@ class Wall extends PositionComponent
   Vector2 get borderSize {
     switch (boundarySide) {
       case BoundarySide.top:
-        return Vector2(gameRef.size.x, 20);
+        return Vector2(gameRef.size.x, 1);
         break;
       case BoundarySide.bottom:
-        return Vector2(gameRef.size.x, 20);
+        return Vector2(gameRef.size.x, 1);
         break;
       case BoundarySide.left:
-        return Vector2(20, gameRef.size.y);
+        return Vector2(1, gameRef.size.y);
         break;
       case BoundarySide.right:
-        return Vector2(20, gameRef.size.y);
+        return Vector2(1, gameRef.size.y);
         break;
       default:
         return Vector2(0, 0);

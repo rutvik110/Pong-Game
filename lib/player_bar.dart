@@ -1,28 +1,38 @@
-import 'dart:developer';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+enum KeyEventEnum {
+  none,
+  down,
+  up,
+}
+
 class Paddle extends PositionComponent
     with HasGameRef<FlameGame>, CollisionCallbacks, KeyboardHandler {
   // Paddle({});
   late final RectangleHitbox paddleHitBox;
   late final RectangleComponent paddle;
+  double deltaTime = 0;
+
+  static const double speed = 400;
+
+  late final KeyboardListenerComponent keyboardListenerComponent;
+  KeyEventEnum keyEventEnum = KeyEventEnum.none;
 
   @override
   Future<void>? onLoad() {
     // TODO: implement onLoad
     final worldRect = gameRef.size.toRect();
-    log(worldRect.center.toString());
-    final size = Vector2(50, 200);
-    final center = Vector2(worldRect.center.dx, worldRect.center.dy);
-    paddle = RectangleComponent(
-        position: center, size: size, paint: Paint()..color = Colors.white);
+
+    final size = Vector2(10, 100);
+    // position = Vector2(200, 200);
+    position.x = worldRect.width - 200;
+    paddle =
+        RectangleComponent(size: size, paint: Paint()..color = Colors.white);
     paddleHitBox = RectangleHitbox(
-      position: center,
       size: size,
     );
 
@@ -32,15 +42,30 @@ class Paddle extends PositionComponent
     ]);
 
     add(
-      KeyboardListenerComponent(
+      keyboardListenerComponent = KeyboardListenerComponent(
         keyDown: {
           LogicalKeyboardKey.arrowDown: (keysPressed) {
-            position += Vector2(0, 50);
+            // position.y += speed * deltaTime;
+            keyEventEnum = KeyEventEnum.down;
 
             return true;
           },
           LogicalKeyboardKey.arrowUp: (keysPressed) {
-            position += Vector2(0, -50);
+            // position.y -= speed * deltaTime;
+            keyEventEnum = KeyEventEnum.up;
+
+            return true;
+          },
+        },
+        keyUp: {
+          LogicalKeyboardKey.arrowDown: (keysPressed) {
+            keyEventEnum = KeyEventEnum.none;
+
+            return true;
+          },
+          LogicalKeyboardKey.arrowUp: (keysPressed) {
+            // position.y -= speed * deltaTime;
+            keyEventEnum = KeyEventEnum.none;
 
             return true;
           },
@@ -48,6 +73,19 @@ class Paddle extends PositionComponent
       ),
     );
     return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    // TODO: implement update
+    super.update(dt);
+    deltaTime = dt;
+    if (keyEventEnum == KeyEventEnum.down) {
+      position.y += speed * deltaTime;
+    }
+    if (keyEventEnum == KeyEventEnum.up) {
+      position.y -= speed * deltaTime;
+    }
   }
 }
 
