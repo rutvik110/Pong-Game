@@ -4,15 +4,16 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 import 'package:flame/palette.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
 import 'package:pong/ai_paddle.dart';
 import 'package:pong/boundaries.dart';
+import 'package:pong/main.dart';
 import 'package:pong/player_bar.dart';
 
 class Ball extends CircleComponent
-    with HasGameRef<FlameGame>, CollisionCallbacks, KeyboardHandler {
+    with HasGameRef<PongGame>, CollisionCallbacks, KeyboardHandler {
   late Paint originalPaint;
   bool giveNudge = false;
 
@@ -108,12 +109,16 @@ class Ball extends CircleComponent
 
       switch (side) {
         case BoundarySide.right:
+          final player = gameRef.aiPlayer;
+          player.score += 1;
           final timer = dartAsync.Timer(const Duration(seconds: 1), () {
             _resetBall;
           });
 
           break;
         case BoundarySide.left:
+          final player = gameRef.player;
+          player.score += 1;
           final timer = dartAsync.Timer(const Duration(seconds: 1), () {
             _resetBall;
           });
@@ -122,10 +127,12 @@ class Ball extends CircleComponent
         case BoundarySide.top:
           vx = velocity.x;
           vy = -velocity.y;
+          FlameAudio.play("ball_hit.wav");
           break;
         case BoundarySide.bottom:
           vx = velocity.x;
           vy = -velocity.y;
+          FlameAudio.play("ball_hit.wav");
           break;
         default:
       }
@@ -147,6 +154,7 @@ class Ball extends CircleComponent
         vx = velocity.x;
         vy = -velocity.y;
       }
+      FlameAudio.play("ball_hit.wav");
     }
 
     if (other is AiPaddle) {
@@ -163,6 +171,7 @@ class Ball extends CircleComponent
         vx = velocity.x;
         vy = -velocity.y;
       }
+      FlameAudio.play("ball_hit.wav");
     }
 
     velocity = Vector2(vx, vy);
