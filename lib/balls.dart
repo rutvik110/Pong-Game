@@ -1,4 +1,5 @@
 import 'dart:async' as dartAsync;
+import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:ui';
 
@@ -111,32 +112,59 @@ class Ball extends CircleComponent
       }
     }
 
-    // log(collisionPoint.y.toString());
-
     if (other is Paddle) {
       final paddleRect = other.paddle.toAbsoluteRect();
-      final isSide = (collisionPoint.x >= paddleRect.left &&
-          collisionPoint.x <= paddleRect.right);
-      final isUpBottom = (collisionPoint.y > other.paddle.y &&
-          collisionPoint.y < other.paddle.y + paddleRect.height);
-      final isLeftOrRight = isSide && !isUpBottom;
+      final ballRect = toAbsoluteRect();
+      final isLeftHit = collisionPoint.x == paddleRect.left;
+      final isRightHit = collisionPoint.x == paddleRect.right;
+      final isTopHit = collisionPoint.y == paddleRect.bottom;
+      final isBottomHit = collisionPoint.y == paddleRect.top;
+
+      // log("Collision Point ---> ${collisionPoint.y.toString()}");
+      // log("Ball Rect--->${ballRect.toString()}");
+
+      // final isSide = (collisionPoint.x >= paddleRect.left &&
+      //     collisionPoint.x <= paddleRect.right);
+      // final isUpBottom = collisionPoint.y == toAbsoluteRect().top ||
+      //     collisionPoint.y == toAbsoluteRect().bottom;
+
+      // (collisionPoint.y > other.paddle.y &&
+      //     collisionPoint.y < other.paddle.y + paddleRect.height);
+      final isLeftOrRight = isLeftHit || isRightHit;
+      final isTopOrBottom = isTopHit || isBottomHit;
+      // log(
+      //   "$isLeftOrRight---$isTopOrBottom",
+      // );
       if (isLeftOrRight) {
         vx = -velocity.x;
         vy = velocity.y;
-      } else {
+      }
+      if (isTopOrBottom) {
+        log("Old--->" "$vy");
         vx = velocity.x;
         vy = -velocity.y;
+        log("Updated--->" "$vy");
       }
       FlameAudio.play("ball_hit.wav");
     }
 
     if (other is AiPaddle) {
+      // log(
+      //   "Collision Point --->$collisionPoint",
+      // );
       final paddleRect = other.paddle.toAbsoluteRect();
+      // log("Paddle Rect--->${paddleRect.toString()}");
+      // log("Ball Rect--->${toAbsoluteRect().toString()}");
+
       final isSide = (collisionPoint.x >= paddleRect.left &&
           collisionPoint.x <= paddleRect.right);
-      final isUpBottom = (collisionPoint.y > other.paddle.y &&
-          collisionPoint.y < other.paddle.y + paddleRect.height);
+      final isUpBottom = collisionPoint.y == toAbsoluteRect().top ||
+          collisionPoint.y == toAbsoluteRect().bottom;
+
+      // (collisionPoint.y == other.paddle.y &&
+      //     collisionPoint.y == other.paddle.y + paddleRect.height);
       final isLeftOrRight = isSide && !isUpBottom;
+
       if (isLeftOrRight) {
         vx = -velocity.x;
         vy = velocity.y;
