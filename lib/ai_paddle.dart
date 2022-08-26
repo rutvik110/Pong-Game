@@ -47,11 +47,11 @@ class AiPaddle extends PositionComponent
 
     if (!isOutOfBounds) {
       if (ball.y > position.y + (paddleRect.width / 2)) {
-        position.y += (300 * dt);
+        position.y += (400 * dt);
       }
 
       if (ball.y < position.y + (paddleRect.width / 2)) {
-        position.y -= (300 * dt);
+        position.y -= (400 * dt);
       }
     }
 

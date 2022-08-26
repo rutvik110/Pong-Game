@@ -15,7 +15,6 @@ class Paddle extends PositionComponent
   // Paddle({});
   late final RectangleHitbox paddleHitBox;
   late final RectangleComponent paddle;
-  double deltaTime = 0;
 
   static const double speed = 400;
 
@@ -83,19 +82,17 @@ class Paddle extends PositionComponent
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-    deltaTime = dt;
     if (keyEventEnum == KeyEventEnum.down) {
-      final updatedPosition = position.y + speed * deltaTime;
+      final updatedPosition = position.y + speed * dt;
       if (updatedPosition < gameRef.size.y - paddle.height) {
         position.y = updatedPosition;
       }
     }
     if (keyEventEnum == KeyEventEnum.up) {
-      final updatedPosition = position.y - speed * deltaTime;
+      final updatedPosition = position.y - speed * dt;
       if (updatedPosition > 0) {
         position.y = updatedPosition;
       }
-      // position.y -= speed * deltaTime;
     }
   }
 }
