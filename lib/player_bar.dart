@@ -29,7 +29,8 @@ class Paddle extends PositionComponent
 
     final size = Vector2(10, 100);
     // position = Vector2(200, 200);
-    position.x = worldRect.width * 0.9;
+    position.x = worldRect.width * 0.9 - 10;
+    position.y = worldRect.height / 2 - size.y / 2;
     paddle =
         RectangleComponent(size: size, paint: Paint()..color = Colors.white);
     paddleHitBox = RectangleHitbox(
@@ -81,10 +82,17 @@ class Paddle extends PositionComponent
     super.update(dt);
     deltaTime = dt;
     if (keyEventEnum == KeyEventEnum.down) {
-      position.y += speed * deltaTime;
+      final updatedPosition = position.y + speed * deltaTime;
+      if (updatedPosition < gameRef.size.y - paddle.height) {
+        position.y = updatedPosition;
+      }
     }
     if (keyEventEnum == KeyEventEnum.up) {
-      position.y -= speed * deltaTime;
+      final updatedPosition = position.y - speed * deltaTime;
+      if (updatedPosition > 0) {
+        position.y = updatedPosition;
+      }
+      // position.y -= speed * deltaTime;
     }
   }
 }
