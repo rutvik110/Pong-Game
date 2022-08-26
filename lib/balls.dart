@@ -14,15 +14,10 @@ import 'package:pong/scoretext.dart';
 
 class Ball extends CircleComponent
     with HasGameRef<PongGame>, CollisionCallbacks, KeyboardHandler {
-  late Paint originalPaint;
-  bool giveNudge = false;
+  late Vector2 velocity;
 
-  Vector2 velocity;
-
-  Ball(this.velocity) {
-    originalPaint = Paint()..color = Colors.white;
-    paint = originalPaint;
-
+  Ball() {
+    paint = Paint()..color = Colors.white;
     radius = 10;
   }
 

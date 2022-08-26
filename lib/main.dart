@@ -44,7 +44,7 @@ class PongGame extends FlameGame
         ),
         Paddle(),
         AiPaddle(),
-        Ball(Vector2(500, 10)),
+        Ball(),
       ],
     );
   }

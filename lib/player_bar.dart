@@ -18,7 +18,6 @@ class Paddle extends PositionComponent
 
   static const double speed = 400;
 
-  late final KeyboardListenerComponent keyboardListenerComponent;
   KeyEventEnum keyEventEnum = KeyEventEnum.none;
 
   @override
@@ -44,7 +43,7 @@ class Paddle extends PositionComponent
     ]);
 
     add(
-      keyboardListenerComponent = KeyboardListenerComponent(
+      KeyboardListenerComponent(
         keyDown: {
           LogicalKeyboardKey.arrowDown: (keysPressed) {
             keyEventEnum = KeyEventEnum.down;
