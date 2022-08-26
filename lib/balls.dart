@@ -5,8 +5,8 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/material.dart';
 import 'package:pong/ai_paddle.dart';
 import 'package:pong/boundaries.dart';
 import 'package:pong/main.dart';
@@ -22,13 +22,13 @@ class Ball extends CircleComponent
   static const double _minNudgeRest = 2.0;
 
   Ball(this.velocity) {
-    originalPaint = randomPaint();
+    originalPaint = Paint()..color = Colors.white;
     paint = originalPaint;
 
     radius = 10;
   }
 
-  Paint randomPaint() => PaintExtension.random(withAlpha: 0.9, base: 100);
+  // Paint randomPaint() => PaintExtension.random(withAlpha: 0.9, base: 100);
   //late final MoveToEffect effect;
 
   @override
