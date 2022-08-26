@@ -1,5 +1,4 @@
 import 'dart:async' as dartAsync;
-import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:ui';
 
@@ -11,6 +10,7 @@ import 'package:pong/ai_paddle.dart';
 import 'package:pong/boundaries.dart';
 import 'package:pong/main.dart';
 import 'package:pong/player_bar.dart';
+import 'package:pong/scoretext.dart';
 
 class Ball extends CircleComponent
     with HasGameRef<PongGame>, CollisionCallbacks, KeyboardHandler {
@@ -28,6 +28,7 @@ class Ball extends CircleComponent
 
   static const double speed = 500;
   static const nudgeSpeed = 300;
+  static const degree = math.pi / 180;
 
   @override
   Future<void>? onLoad() {
@@ -44,20 +45,26 @@ class Ball extends CircleComponent
   }
 
   void get _resetBall {
-    final sideToThrow = math.Random().nextBool();
     position = gameRef.size / 2;
-    final random = math.Random().nextDouble();
-    const degree = math.pi / 180;
-    final angle = sideToThrow
-        ? lerpDouble(-35, 35, random)!
-        : lerpDouble(145, 215, random)!;
+    final spawnAngle = getSpawnAngle;
 
-    final vx = math.cos(angle * degree) * speed;
-    final vy = math.sin(angle * degree) * speed;
+    final vx = math.cos(spawnAngle * degree) * speed;
+    final vy = math.sin(spawnAngle * degree) * speed;
     velocity = Vector2(
       vx,
       vy,
     );
+  }
+
+  double get getSpawnAngle {
+    final sideToThrow = math.Random().nextBool();
+
+    final random = math.Random().nextDouble();
+    final spawnAngle = sideToThrow
+        ? lerpDouble(-35, 35, random)!
+        : lerpDouble(145, 215, random)!;
+
+    return spawnAngle;
   }
 
   @override
@@ -73,8 +80,6 @@ class Ball extends CircleComponent
   ) {
     super.onCollisionStart(intersectionPoints, other);
     final collisionPoint = intersectionPoints.toList()[0];
-    double vx = velocity.x;
-    double vy = velocity.y;
 
     if (other is Wall) {
       final side = other.boundarySide;
@@ -82,29 +87,22 @@ class Ball extends CircleComponent
       switch (side) {
         case BoundarySide.right:
           final player = gameRef.aiPlayer;
-          player.score += 1;
-          dartAsync.Timer(const Duration(seconds: 1), () {
-            _resetBall;
-          });
+          updatePlayerScore(player);
 
           break;
         case BoundarySide.left:
           final player = gameRef.player;
-          player.score += 1;
-          dartAsync.Timer(const Duration(seconds: 1), () {
-            _resetBall;
-          });
-
+          updatePlayerScore(player);
           break;
         case BoundarySide.top:
-          vx = velocity.x;
-          vy = -velocity.y;
-          FlameAudio.play("ball_hit.wav");
+          velocity.x = velocity.x;
+          velocity.y = -velocity.y;
+          _playCollisionAudio;
           break;
         case BoundarySide.bottom:
-          vx = velocity.x;
-          vy = -velocity.y;
-          FlameAudio.play("ball_hit.wav");
+          velocity.x = velocity.x;
+          velocity.y = -velocity.y;
+          _playCollisionAudio;
           break;
         default:
       }
@@ -113,50 +111,49 @@ class Ball extends CircleComponent
     if (other is Paddle) {
       final paddleRect = other.paddle.toAbsoluteRect();
 
-      final isLeftHit = collisionPoint.x == paddleRect.left;
-      final isRightHit = collisionPoint.x == paddleRect.right;
-      final isTopHit = collisionPoint.y == paddleRect.bottom;
-      final isBottomHit = collisionPoint.y == paddleRect.top;
-
-      final isLeftOrRight = isLeftHit || isRightHit;
-      final isTopOrBottom = isTopHit || isBottomHit;
-
-      if (isLeftOrRight) {
-        vx = -velocity.x;
-
-        vy = velocity.y + nudgeSpeed;
-        log(vy.toString());
-        log(vy.toString());
-      }
-      if (isTopOrBottom) {
-        vx = velocity.x;
-        vy = -velocity.y;
-      }
-      FlameAudio.play("ball_hit.wav");
+      velocity = updateBallTrajectory(collisionPoint, paddleRect);
+      _playCollisionAudio;
     }
 
     if (other is AiPaddle) {
       final paddleRect = other.paddle.toAbsoluteRect();
 
-      final isLeftHit = collisionPoint.x == paddleRect.left;
-      final isRightHit = collisionPoint.x == paddleRect.right;
-      final isTopHit = collisionPoint.y == paddleRect.bottom;
-      final isBottomHit = collisionPoint.y == paddleRect.top;
+      velocity = updateBallTrajectory(collisionPoint, paddleRect);
 
-      final isLeftOrRight = isLeftHit || isRightHit;
-      final isTopOrBottom = isTopHit || isBottomHit;
+      _playCollisionAudio;
+    }
+  }
 
-      if (isLeftOrRight) {
-        vx = -velocity.x;
-        vy = velocity.y + nudgeSpeed;
-      }
-      if (isTopOrBottom) {
-        vx = velocity.x;
-        vy = -velocity.y;
-      }
-      FlameAudio.play("ball_hit.wav");
+  void updatePlayerScore(ScoreText player) {
+    player.score += 1;
+    dartAsync.Timer(const Duration(seconds: 1), () {
+      _resetBall;
+    });
+  }
+
+  Vector2 updateBallTrajectory(Vector2 collisionPoint, Rect paddleRect) {
+    Vector2 updatedVelocity = velocity;
+    final isLeftHit = collisionPoint.x == paddleRect.left;
+    final isRightHit = collisionPoint.x == paddleRect.right;
+    final isTopHit = collisionPoint.y == paddleRect.bottom;
+    final isBottomHit = collisionPoint.y == paddleRect.top;
+
+    final isLeftOrRight = isLeftHit || isRightHit;
+    final isTopOrBottom = isTopHit || isBottomHit;
+
+    if (isLeftOrRight) {
+      updatedVelocity.x = -velocity.x;
+      updatedVelocity.y = velocity.y + nudgeSpeed;
+    }
+    if (isTopOrBottom) {
+      updatedVelocity.x = velocity.x;
+      updatedVelocity.y = -velocity.y;
     }
 
-    velocity = Vector2(vx, vy);
+    return updatedVelocity;
   }
+}
+
+void get _playCollisionAudio {
+  FlameAudio.play("ball_hit.wav");
 }
