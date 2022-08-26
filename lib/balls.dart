@@ -6,7 +6,6 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/services.dart';
 import 'package:pong/ai_paddle.dart';
 import 'package:pong/boundaries.dart';
 import 'package:pong/main.dart';
@@ -40,34 +39,8 @@ class Ball extends CircleComponent
 
     addAll([
       hitBox,
-      // ball,
     ]);
-    add(
-      KeyboardListenerComponent(
-        keyDown: {
-          // LogicalKeyboardKey.arrowDown: (keysPressed) {
-          //   position += Vector2(0, 5);
 
-          //   return true;
-          // },
-          // LogicalKeyboardKey.arrowUp: (keysPressed) {
-          //   position += Vector2(0, -5);
-
-          //   return true;
-          // },
-          LogicalKeyboardKey.arrowLeft: (keysPressed) {
-            position += Vector2(-5, 0);
-
-            return true;
-          },
-          LogicalKeyboardKey.arrowRight: (keysPressed) {
-            position += Vector2(5, 0);
-
-            return true;
-          },
-        },
-      ),
-    );
     return super.onLoad();
   }
 

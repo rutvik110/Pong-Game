@@ -203,13 +203,13 @@ Vector2 getSidePosition(FlameGame game, BoundarySide side) {
       return Vector2(0, 0);
       break;
     case BoundarySide.bottom:
-      return Vector2(0, game.size.y - 10);
+      return Vector2(0, game.size.y - 5);
       break;
     case BoundarySide.left:
       return Vector2(0, 0);
       break;
     case BoundarySide.right:
-      return Vector2(game.size.x - 10, 0);
+      return Vector2(game.size.x - 1, 0);
       break;
     default:
       return Vector2(0, 0);
@@ -219,16 +219,16 @@ Vector2 getSidePosition(FlameGame game, BoundarySide side) {
 Vector2 getSideSize(FlameGame game, BoundarySide side) {
   switch (side) {
     case BoundarySide.top:
-      return Vector2(game.size.x, 10);
+      return Vector2(game.size.x, 5);
       break;
     case BoundarySide.bottom:
-      return Vector2(game.size.x, 10);
+      return Vector2(game.size.x, 5);
       break;
     case BoundarySide.left:
-      return Vector2(10, game.size.y);
+      return Vector2(1, game.size.y);
       break;
     case BoundarySide.right:
-      return Vector2(10, game.size.y);
+      return Vector2(1, game.size.y);
       break;
     default:
       return Vector2(0, 0);

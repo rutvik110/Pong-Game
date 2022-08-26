@@ -28,7 +28,7 @@ class PongGame extends FlameGame
 
   @override
   // TODO: implement debugMode
-  bool get debugMode => true;
+  bool get debugMode => false;
 
   late final ScoreText aiPlayer;
   late final ScoreText player;
@@ -72,7 +72,6 @@ class PongGame extends FlameGame
   ) {
     super.onKeyEvent(event, keysPressed);
 
-    // Return handled to prevent macOS noises.
     return KeyEventResult.handled;
   }
 }
