@@ -28,7 +28,6 @@ class Paddle extends PositionComponent
     final worldRect = gameRef.size.toRect();
 
     final size = Vector2(10, 100);
-    // position = Vector2(200, 200);
     position.x = worldRect.width * 0.9 - 10;
     position.y = worldRect.height / 2 - size.y / 2;
     paddle = RectangleComponent(
@@ -48,13 +47,11 @@ class Paddle extends PositionComponent
       keyboardListenerComponent = KeyboardListenerComponent(
         keyDown: {
           LogicalKeyboardKey.arrowDown: (keysPressed) {
-            // position.y += speed * deltaTime;
             keyEventEnum = KeyEventEnum.down;
 
             return true;
           },
           LogicalKeyboardKey.arrowUp: (keysPressed) {
-            // position.y -= speed * deltaTime;
             keyEventEnum = KeyEventEnum.up;
 
             return true;
@@ -96,68 +93,3 @@ class Paddle extends PositionComponent
     }
   }
 }
-
-
-
-
-// class Bar extends BodyComponent
-//     with ContactCallbacks, KeyboardHandler, Tappable {
-//   late Vector2 barPosition;
-
-//   @override
-//   Body createBody() {
-//     barPosition = Vector2(10, 20);
-//     final bar = PolygonShape()..setAsBoxXY(2, 5);
-
-//     final fixtureDef = FixtureDef(
-//       bar,
-//       restitution: 1,
-//       density: 1.0,
-//       friction: 0,
-//     );
-
-//     final bodyDef = BodyDef(
-//       userData: this,
-//       position: Vector2(10, 20),
-//       type: BodyType.static,
-//     );
-//     add(
-//       KeyboardListenerComponent(keyDown: {
-//         LogicalKeyboardKey.arrowUp: (keysPressed) {
-//           body. = Vector2(0, -10);
-
-//           return true;
-//         },
-//         LogicalKeyboardKey.arrowDown: (keysPressed) {
-//           body.linearVelocity = Vector2(0, 10);
-//           return true;
-//         },
-//         LogicalKeyboardKey.keyW: (keysPressed) {
-//           return true;
-//         },
-//         LogicalKeyboardKey.keyS: (keysPressed) {
-//           return true;
-//         },
-//       }, keyUp: {
-//         LogicalKeyboardKey.arrowUp: (keysPressed) {
-//           body.linearVelocity = Vector2(0, 0);
-
-//           return true;
-//         },
-//         LogicalKeyboardKey.arrowDown: (keysPressed) {
-//           body.linearVelocity = Vector2(0, 0);
-//           return true;
-//         },
-//       }),
-//     );
-//     final fixture = world.createBody(bodyDef)..createFixture(fixtureDef);
-//     return fixture;
-//   }
-
-//   @override
-//   void update(double dt) {
-//     // TODO: implement update
-//     super.update(dt);
-//     //  body.applyLinearImpulse(-Vector2(0, 10.0));
-//   }
-// }

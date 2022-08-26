@@ -37,7 +37,6 @@ class AiPaddle extends PositionComponent
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-    // update the aipaddle position with respect to balls positions
 
     final ball = gameRef.children.singleWhere((child) => child is Ball) as Ball;
     final paddleRect = paddle.toAbsoluteRect();
@@ -54,9 +53,5 @@ class AiPaddle extends PositionComponent
         position.y -= (400 * dt);
       }
     }
-
-    // position.y = (ball.y - paddleRect.top - paddleRect.height / 2) * 0.8;
-
-    // position.y += 5 * (ball.y.sign.isNegative ? -1 : 1);
   }
 }
