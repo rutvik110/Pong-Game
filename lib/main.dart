@@ -15,32 +15,17 @@ void main() {
   runApp(GameWidget(game: game));
 }
 
-const TextStyle _textStyle = TextStyle(color: Colors.white, fontSize: 2);
-
 class PongGame extends FlameGame
     with HasTappables, HasCollisionDetection, HasKeyboardHandlerComponents {
-  static const description = '''
-    This example shows how to compose a `BodyComponent` together with a normal
-    Flame component. Click the ball to see the number increment.
-  ''';
-
   PongGame();
-
-  @override
-  // TODO: implement debugMode
-  bool get debugMode => false;
 
   late final ScoreText aiPlayer;
   late final ScoreText player;
 
   @override
   Future<void> onLoad() async {
-    //  final screenHitBox = ScreenHitbox();
-
     final boundaries = createBoundaries(this);
     boundaries.forEach(add);
-
-    // final viewportCenter = camera.viewport.effectiveSize / 2;
 
     addAll(
       [
