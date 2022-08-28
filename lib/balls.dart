@@ -7,7 +7,6 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:pong/ai_paddle.dart';
-import 'package:pong/boundaries.dart';
 import 'package:pong/main.dart';
 import 'package:pong/player_bar.dart';
 import 'package:pong/scoretext.dart';
@@ -76,30 +75,30 @@ class Ball extends CircleComponent
     super.onCollisionStart(intersectionPoints, other);
     final collisionPoint = intersectionPoints.toList()[0];
 
-    if (other is Wall) {
-      final side = other.boundarySide;
+    if (other is ScreenHitbox) {
+      final collisionPoint = intersectionPoints.first;
 
-      switch (side) {
-        case BoundarySide.right:
-          final player = gameRef.aiPlayer;
-          updatePlayerScore(player);
-
-          break;
-        case BoundarySide.left:
-          final player = gameRef.player;
-          updatePlayerScore(player);
-          break;
-        case BoundarySide.top:
-          velocity.x = velocity.x;
-          velocity.y = -velocity.y;
-          _playCollisionAudio;
-          break;
-        case BoundarySide.bottom:
-          velocity.x = velocity.x;
-          velocity.y = -velocity.y;
-          _playCollisionAudio;
-          break;
-        default:
+      // Left Side Collision
+      if (collisionPoint.x == 0) {
+        final player = gameRef.player;
+        updatePlayerScore(player);
+      }
+      // Right Side Collision
+      if (collisionPoint.x == gameRef.size.x) {
+        final player = gameRef.aiPlayer;
+        updatePlayerScore(player);
+      }
+      // Top Side Collision
+      if (collisionPoint.y == 0) {
+        velocity.x = velocity.x;
+        velocity.y = -velocity.y;
+        _playCollisionAudio;
+      }
+      // Bottom Side Collision
+      if (collisionPoint.y == gameRef.size.y) {
+        velocity.x = velocity.x;
+        velocity.y = -velocity.y;
+        _playCollisionAudio;
       }
     }
 
@@ -142,7 +141,7 @@ class Ball extends CircleComponent
     }
     if (isTopOrBottom) {
       updatedVelocity.x = velocity.x;
-      updatedVelocity.y = -velocity.y;
+      updatedVelocity.y = -velocity.y + nudgeSpeed;
     }
 
     return updatedVelocity;
@@ -152,3 +151,30 @@ class Ball extends CircleComponent
 void get _playCollisionAudio {
   FlameAudio.play("ball_hit.wav");
 }
+
+
+// @override
+//   void update(double dt) {
+//     super.update(dt);
+//     position += velocity * dt;
+
+//     if (giveNudge) {
+//       if (_timeSinceNudge <= 3) {
+//         nudgedVelocity = lerpDouble(nudgeSpeed, 0, _timeSinceNudge)! * dt;
+
+//         // velocity += nudgedVelocity;
+
+//         // final addedVelocity = lerpDouble(800, 0, _timeSinceNudge)! * dt;
+
+//         velocity.y += nudgedVelocity;
+//         velocity.x += nudgedVelocity;
+//         _timeSinceNudge + dt;
+//       } else {
+//         nudgedVelocity = 0;
+//         _timeSinceNudge = 0;
+//         giveNudge = false;
+//       }
+//     } else {
+//       nudgedVelocity = 0;
+//     }
+//   }

@@ -1,9 +1,9 @@
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pong/balls.dart';
-import 'package:pong/boundaries.dart';
 import 'package:pong/fieldline.dart';
 import 'package:pong/player_bar.dart';
 import 'package:pong/scoretext.dart';
@@ -24,11 +24,9 @@ class PongGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    final boundaries = createBoundaries(this);
-    boundaries.forEach(add);
-
     addAll(
       [
+        ScreenHitbox(),
         FieldLine(),
         aiPlayer = ScoreText(
           position: Vector2(
