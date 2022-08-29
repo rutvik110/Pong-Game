@@ -99,11 +99,13 @@ class Ball extends CircleComponent
       if (collisionPoint.y == 0) {
         velocity.x = velocity.x;
         velocity.y = -velocity.y;
+        _playCollisionAudio;
       }
       // Bottom Side Collision
       if (collisionPoint.y == gameRef.size.y) {
         velocity.x = velocity.x;
         velocity.y = -velocity.y;
+        _playCollisionAudio;
       }
     }
 
@@ -111,15 +113,16 @@ class Ball extends CircleComponent
       final paddleRect = other.paddle.toAbsoluteRect();
 
       updateBallTrajectory(collisionPoint, paddleRect);
+      _playCollisionAudio;
     }
 
     if (other is AIPaddle) {
       final paddleRect = other.paddle.toAbsoluteRect();
 
       updateBallTrajectory(collisionPoint, paddleRect);
-    }
 
-    _playCollisionAudio;
+      _playCollisionAudio;
+    }
   }
 
   void updateScore(ScoreText player) {
