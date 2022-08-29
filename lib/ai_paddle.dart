@@ -12,11 +12,10 @@ class AiPaddle extends PositionComponent
   @override
   Future<void>? onLoad() {
     // TODO: implement onLoad
-    final worldRect = gameRef.size.toRect();
 
-    final size = Vector2(10, 100);
-    position.x = worldRect.width * 0.1;
-    position.y = worldRect.height / 2 - size.y / 2;
+    final paddleSize = Vector2(10, 100);
+    position.x = size.x * 0.1;
+    position.y = size.y / 2 - paddleSize.y / 2;
     paddle = RectangleComponent(
       size: size,
       paint: Paint()..color = Colors.red,
