@@ -77,11 +77,11 @@ class Ball extends CircleComponent
 
   @override
   @mustCallSuper
-  void onCollision(
+  void onCollisionStart(
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
-    super.onCollision(intersectionPoints, other);
+    super.onCollisionStart(intersectionPoints, other);
     final collisionPoint = intersectionPoints.first;
 
     if (other is ScreenHitbox) {

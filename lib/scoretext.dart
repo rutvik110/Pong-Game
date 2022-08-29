@@ -25,7 +25,7 @@ class ScoreText extends TextComponent with HasGameRef<PongGame> {
   Future<void>? onLoad() {
     score = 0;
     final textOffset =
-        (_textPaint.textDirection == TextDirection.ltr ? 1 : -1) * 50;
+        (_textPaint.textDirection == TextDirection.ltr ? -1 : 1) * 50;
     position.setValues(gameRef.size.x / 2 + textOffset, gameRef.size.y * 0.1);
     text = score.toString();
 
