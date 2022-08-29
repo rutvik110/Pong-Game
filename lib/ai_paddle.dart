@@ -13,9 +13,11 @@ class AIPaddle extends PositionComponent
   Future<void>? onLoad() {
     // TODO: implement onLoad
 
-    final paddleSize = Vector2(10, 100);
-    position.x = size.x * 0.1;
-    position.y = size.y / 2 - paddleSize.y / 2;
+    final worldRect = gameRef.size.toRect();
+
+    size = Vector2(10, 100);
+    position.x = worldRect.width * 0.1;
+    position.y = worldRect.height / 2 - size.y / 2;
     paddle = RectangleComponent(
       size: size,
       paint: Paint()..color = Colors.red,
@@ -38,8 +40,7 @@ class AIPaddle extends PositionComponent
     super.update(dt);
 
     final ball = gameRef.children.singleWhere((child) => child is Ball) as Ball;
-    final paddleRect = paddle.toAbsoluteRect();
-    final ballPositionWrtPaddleHeight = ball.y + (paddleRect.height);
+    final ballPositionWrtPaddleHeight = ball.y + (size.y);
     final isOutOfBounds =
         ballPositionWrtPaddleHeight > gameRef.size.y || ball.y < 0;
 
