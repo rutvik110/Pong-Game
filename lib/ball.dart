@@ -8,21 +8,20 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:pong/ai_paddle.dart';
 import 'package:pong/main.dart';
-import 'package:pong/player_bar.dart';
+import 'package:pong/player_paddle.dart';
 import 'package:pong/scoretext.dart';
 
 class Ball extends CircleComponent
-    with HasGameRef<PongGame>, CollisionCallbacks, KeyboardHandler {
-  late Vector2 velocity;
-
+    with HasGameRef<PongGame>, CollisionCallbacks {
   Ball() {
     paint = Paint()..color = Colors.white;
     radius = 10;
   }
 
   static const double speed = 500;
-  static const nudgeSpeed = 300;
+  late Vector2 velocity;
   static const degree = math.pi / 180;
+  static const nudgeSpeed = 300;
 
   @override
   Future<void>? onLoad() {
@@ -68,16 +67,15 @@ class Ball extends CircleComponent
   }
 
   @override
-  void onCollisionStart(
+  @mustCallSuper
+  void onCollision(
     Set<Vector2> intersectionPoints,
     PositionComponent other,
   ) {
-    super.onCollisionStart(intersectionPoints, other);
-    final collisionPoint = intersectionPoints.toList()[0];
+    super.onCollision(intersectionPoints, other);
+    final collisionPoint = intersectionPoints.first;
 
     if (other is ScreenHitbox) {
-      final collisionPoint = intersectionPoints.first;
-
       // Left Side Collision
       if (collisionPoint.x == 0) {
         final player = gameRef.player;
@@ -102,17 +100,17 @@ class Ball extends CircleComponent
       }
     }
 
-    if (other is Paddle) {
+    if (other is PlayerPaddle) {
       final paddleRect = other.paddle.toAbsoluteRect();
 
-      velocity = updateBallTrajectory(collisionPoint, paddleRect);
+      updateBallTrajectory(collisionPoint, paddleRect);
       _playCollisionAudio;
     }
 
     if (other is AiPaddle) {
       final paddleRect = other.paddle.toAbsoluteRect();
 
-      velocity = updateBallTrajectory(collisionPoint, paddleRect);
+      updateBallTrajectory(collisionPoint, paddleRect);
 
       _playCollisionAudio;
     }
@@ -125,8 +123,7 @@ class Ball extends CircleComponent
     });
   }
 
-  Vector2 updateBallTrajectory(Vector2 collisionPoint, Rect paddleRect) {
-    Vector2 updatedVelocity = velocity;
+  void updateBallTrajectory(Vector2 collisionPoint, Rect paddleRect) {
     final isLeftHit = collisionPoint.x == paddleRect.left;
     final isRightHit = collisionPoint.x == paddleRect.right;
     final isTopHit = collisionPoint.y == paddleRect.bottom;
@@ -136,15 +133,13 @@ class Ball extends CircleComponent
     final isTopOrBottom = isTopHit || isBottomHit;
 
     if (isLeftOrRight) {
-      updatedVelocity.x = -velocity.x;
-      updatedVelocity.y = velocity.y + nudgeSpeed;
+      velocity.x = -velocity.x;
+      velocity.y = velocity.y + nudgeSpeed;
     }
     if (isTopOrBottom) {
-      updatedVelocity.x = velocity.x;
-      updatedVelocity.y = -velocity.y + nudgeSpeed;
+      velocity.x = velocity.x;
+      velocity.y = -velocity.y + nudgeSpeed;
     }
-
-    return updatedVelocity;
   }
 }
 

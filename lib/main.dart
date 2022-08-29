@@ -3,9 +3,9 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pong/balls.dart';
+import 'package:pong/ball.dart';
 import 'package:pong/fieldline.dart';
-import 'package:pong/player_bar.dart';
+import 'package:pong/player_paddle.dart';
 import 'package:pong/scoretext.dart';
 
 import 'ai_paddle.dart';
@@ -28,19 +28,9 @@ class PongGame extends FlameGame
       [
         ScreenHitbox(),
         FieldLine(),
-        aiPlayer = ScoreText(
-          position: Vector2(
-            size.x / 2 - 65,
-            25,
-          ),
-        ),
-        player = ScoreText(
-          position: Vector2(
-            size.x / 2 + 50,
-            25,
-          ),
-        ),
-        Paddle(),
+        aiPlayer = ScoreText.aiScore(),
+        player = ScoreText.playerScore(),
+        PlayerPaddle(),
         AiPaddle(),
         Ball(),
       ],

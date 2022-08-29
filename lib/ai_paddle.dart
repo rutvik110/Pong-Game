@@ -2,7 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:pong/balls.dart';
+import 'package:pong/ball.dart';
 
 class AiPaddle extends PositionComponent
     with HasGameRef<FlameGame>, CollisionCallbacks, KeyboardHandler {
@@ -41,15 +41,15 @@ class AiPaddle extends PositionComponent
     final ball = gameRef.children.singleWhere((child) => child is Ball) as Ball;
     final paddleRect = paddle.toAbsoluteRect();
     final ballPositionWrtPaddleHeight = ball.y + (paddleRect.height);
-    final isOutOfBounds = ballPositionWrtPaddleHeight > gameRef.size.y ||
-        ball.y - (paddleRect.width / 2) < 0;
+    final isOutOfBounds =
+        ballPositionWrtPaddleHeight > gameRef.size.y || ball.y < 0;
 
     if (!isOutOfBounds) {
-      if (ball.y > position.y + (paddleRect.width / 2)) {
+      if (ball.y > position.y) {
         position.y += (400 * dt);
       }
 
-      if (ball.y < position.y + (paddleRect.width / 2)) {
+      if (ball.y < position.y) {
         position.y -= (400 * dt);
       }
     }

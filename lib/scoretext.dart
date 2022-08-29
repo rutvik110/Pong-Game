@@ -1,20 +1,32 @@
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:pong/main.dart';
 
-class ScoreText extends TextComponent with HasGameRef<FlameGame> {
+class ScoreText extends TextComponent with HasGameRef<PongGame> {
   late int score;
 
-  final TextPaint _textPaint = TextPaint();
+  ScoreText.aiScore({
+    this.score = 0,
+  })  : _textPaint = TextPaint(textDirection: TextDirection.ltr),
+        super(
+          anchor: Anchor.center,
+        );
 
-  ScoreText({
-    required Vector2 position,
-  }) : super(position: position);
+  ScoreText.playerScore({
+    this.score = 0,
+  })  : _textPaint = TextPaint(textDirection: TextDirection.rtl),
+        super(
+          anchor: Anchor.center,
+        );
+
+  late final TextPaint _textPaint;
 
   @override
   Future<void>? onLoad() {
     score = 0;
-    // TODO: implement onLoad
+    final textOffset =
+        (_textPaint.textDirection == TextDirection.ltr ? 1 : -1) * 50;
+    position.setValues(gameRef.size.x / 2 + textOffset, gameRef.size.y * 0.1);
     text = score.toString();
 
     return super.onLoad();

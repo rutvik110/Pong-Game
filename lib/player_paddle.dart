@@ -5,20 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 enum KeyEventEnum {
-  none,
-  down,
   up,
+  down,
+  none,
 }
 
-class Paddle extends PositionComponent
-    with HasGameRef<FlameGame>, CollisionCallbacks, KeyboardHandler {
-  // Paddle({});
+class PlayerPaddle extends PositionComponent
+    with HasGameRef<FlameGame>, CollisionCallbacks {
+  // PlayerPaddle({});
   late final RectangleHitbox paddleHitBox;
   late final RectangleComponent paddle;
 
+  KeyEventEnum keyPressed = KeyEventEnum.none;
   static const double speed = 400;
-
-  KeyEventEnum keyEventEnum = KeyEventEnum.none;
 
   @override
   Future<void>? onLoad() {
@@ -46,25 +45,24 @@ class Paddle extends PositionComponent
       KeyboardListenerComponent(
         keyDown: {
           LogicalKeyboardKey.arrowDown: (keysPressed) {
-            keyEventEnum = KeyEventEnum.down;
+            keyPressed = KeyEventEnum.down;
 
             return true;
           },
           LogicalKeyboardKey.arrowUp: (keysPressed) {
-            keyEventEnum = KeyEventEnum.up;
+            keyPressed = KeyEventEnum.up;
 
             return true;
           },
         },
         keyUp: {
           LogicalKeyboardKey.arrowDown: (keysPressed) {
-            keyEventEnum = KeyEventEnum.none;
+            keyPressed = KeyEventEnum.none;
 
             return true;
           },
           LogicalKeyboardKey.arrowUp: (keysPressed) {
-            // position.y -= speed * deltaTime;
-            keyEventEnum = KeyEventEnum.none;
+            keyPressed = KeyEventEnum.none;
 
             return true;
           },
@@ -78,13 +76,13 @@ class Paddle extends PositionComponent
   void update(double dt) {
     // TODO: implement update
     super.update(dt);
-    if (keyEventEnum == KeyEventEnum.down) {
+    if (keyPressed == KeyEventEnum.down) {
       final updatedPosition = position.y + speed * dt;
       if (updatedPosition < gameRef.size.y - paddle.height) {
         position.y = updatedPosition;
       }
     }
-    if (keyEventEnum == KeyEventEnum.up) {
+    if (keyPressed == KeyEventEnum.up) {
       final updatedPosition = position.y - speed * dt;
       if (updatedPosition > 0) {
         position.y = updatedPosition;
