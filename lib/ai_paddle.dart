@@ -4,7 +4,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:pong/ball.dart';
 
-class AiPaddle extends PositionComponent
+class AIPaddle extends PositionComponent
     with HasGameRef<FlameGame>, CollisionCallbacks, KeyboardHandler {
   late final RectangleHitbox paddleHitBox;
   late final RectangleComponent paddle;

@@ -31,7 +31,7 @@ class PongGame extends FlameGame
         aiPlayer = ScoreText.aiScore(),
         player = ScoreText.playerScore(),
         PlayerPaddle(),
-        AiPaddle(),
+        AIPaddle(),
         Ball(),
       ],
     );

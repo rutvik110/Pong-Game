@@ -107,7 +107,7 @@ class Ball extends CircleComponent
       _playCollisionAudio;
     }
 
-    if (other is AiPaddle) {
+    if (other is AIPaddle) {
       final paddleRect = other.paddle.toAbsoluteRect();
 
       updateBallTrajectory(collisionPoint, paddleRect);
