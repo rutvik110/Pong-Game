@@ -11,6 +11,15 @@ import 'package:pong/main.dart';
 import 'package:pong/player_paddle.dart';
 import 'package:pong/scoretext.dart';
 
+/*
+ -lib/
+   |---main.dart
+   |---pong_game.dart
+   |---player_paddle.dart
+   |---ball.dart
+   |---ai_paddle.dart
+   |---scoretext.dart
+*/
 class Ball extends CircleComponent
     with HasGameRef<PongGame>, CollisionCallbacks {
   Ball() {
@@ -79,24 +88,22 @@ class Ball extends CircleComponent
       // Left Side Collision
       if (collisionPoint.x == 0) {
         final player = gameRef.player;
-        updatePlayerScore(player);
+        updateScore(player);
       }
       // Right Side Collision
       if (collisionPoint.x == gameRef.size.x) {
         final player = gameRef.aiPlayer;
-        updatePlayerScore(player);
+        updateScore(player);
       }
       // Top Side Collision
       if (collisionPoint.y == 0) {
         velocity.x = velocity.x;
         velocity.y = -velocity.y;
-        _playCollisionAudio;
       }
       // Bottom Side Collision
       if (collisionPoint.y == gameRef.size.y) {
         velocity.x = velocity.x;
         velocity.y = -velocity.y;
-        _playCollisionAudio;
       }
     }
 
@@ -104,19 +111,18 @@ class Ball extends CircleComponent
       final paddleRect = other.paddle.toAbsoluteRect();
 
       updateBallTrajectory(collisionPoint, paddleRect);
-      _playCollisionAudio;
     }
 
     if (other is AIPaddle) {
       final paddleRect = other.paddle.toAbsoluteRect();
 
       updateBallTrajectory(collisionPoint, paddleRect);
-
-      _playCollisionAudio;
     }
+
+    _playCollisionAudio;
   }
 
-  void updatePlayerScore(ScoreText player) {
+  void updateScore(ScoreText player) {
     player.score += 1;
     dartAsync.Timer(const Duration(seconds: 1), () {
       _resetBall;
@@ -146,7 +152,6 @@ class Ball extends CircleComponent
 void get _playCollisionAudio {
   FlameAudio.play("ball_hit.wav");
 }
-
 
 // @override
 //   void update(double dt) {
