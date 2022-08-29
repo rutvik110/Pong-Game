@@ -153,7 +153,7 @@ class Ball extends CircleComponent
 }
 
 void get _playCollisionAudio {
-  FlameAudio.play("ball_hit.wav");
+  FlameAudio.play("ball_collision.wav");
 }
 
 // @override
