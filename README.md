@@ -1,6 +1,6 @@
 # Pong Game
 
-This is the clone of the classic Pong game built in 💙Flutter with 🔥Flame.
+Remake of the classic Pong game built in 💙Flutter with 🔥Flame.
 
 ✍🏽Article -> Coming Soon!
 
