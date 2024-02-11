@@ -28,7 +28,7 @@ class Ball extends CircleComponent with HasGameRef<PongGame>, CollisionCallbacks
 
   static const double speed = 500;
   late Vector2 velocity;
-  static const nudgeSpeed = 300;
+  static const nudgeSpeed = 20;
 
   @override
   Future<void> onLoad() {
@@ -139,12 +139,22 @@ class Ball extends CircleComponent with HasGameRef<PongGame>, CollisionCallbacks
 
     if (isLeftOrRight) {
       velocity.x = -velocity.x;
-      velocity.y = velocity.y + nudgeSpeed;
+      velocity.y = velocity.y;
     }
+
     if (isTopOrBottom) {
       velocity.x = velocity.x;
-      velocity.y = -velocity.y + nudgeSpeed;
+      velocity.y = -velocity.y;
     }
+
+    // adjust for paddle velocity
+    // if (velocity.x < 1000) {
+    //   velocity.x += velocity.x.sign * nudgeSpeed;
+    // }
+
+    // if (velocity.y < 1000) {
+    //   velocity.y += velocity.y.sign * nudgeSpeed;
+    // }
   }
 }
 
