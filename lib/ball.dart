@@ -49,8 +49,8 @@ class Ball extends CircleComponent with HasGameRef<PongGame>, CollisionCallbacks
     position = gameRef.size / 2;
     final spawnAngle = getSpawnAngle;
 
-    final vx = math.cos(spawnAngle * degree) * speed;
-    final vy = math.sin(spawnAngle * degree) * speed;
+    final vx = math.cos(radians(spawnAngle)) * speed;
+    final vy = math.sin(radians(spawnAngle)) * speed;
     velocity = Vector2(
       vx,
       vy,
