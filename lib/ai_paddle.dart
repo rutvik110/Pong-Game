@@ -4,15 +4,12 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:pong/ball.dart';
 
-class AIPaddle extends PositionComponent
-    with HasGameRef<FlameGame>, CollisionCallbacks, KeyboardHandler {
+class AIPaddle extends PositionComponent with HasGameRef<FlameGame>, CollisionCallbacks, KeyboardHandler {
   late final RectangleHitbox paddleHitBox;
   late final RectangleComponent paddle;
 
   @override
-  Future<void>? onLoad() {
-    // TODO: implement onLoad
-
+  Future<void> onLoad() async {
     final worldRect = gameRef.size.toRect();
 
     size = Vector2(10, 100);
@@ -41,8 +38,7 @@ class AIPaddle extends PositionComponent
 
     final ball = gameRef.children.singleWhere((child) => child is Ball) as Ball;
     final ballPositionWrtPaddleHeight = ball.y + (size.y);
-    final isOutOfBounds =
-        ballPositionWrtPaddleHeight > gameRef.size.y || ball.y < 0;
+    final isOutOfBounds = ballPositionWrtPaddleHeight > gameRef.size.y || ball.y < 0;
 
     if (!isOutOfBounds) {
       if (ball.y > position.y) {

@@ -15,8 +15,7 @@ void main() {
   runApp(GameWidget(game: game));
 }
 
-class PongGame extends FlameGame
-    with HasTappables, HasCollisionDetection, HasKeyboardHandlerComponents {
+class PongGame extends FlameGame with HasCollisionDetection, HasKeyboardHandlerComponents {
   PongGame();
 
   late final ScoreText aiPlayer;

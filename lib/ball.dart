@@ -20,8 +20,7 @@ import 'package:pong/scoretext.dart';
    |---ai_paddle.dart
    |---scoretext.dart
 */
-class Ball extends CircleComponent
-    with HasGameRef<PongGame>, CollisionCallbacks {
+class Ball extends CircleComponent with HasGameRef<PongGame>, CollisionCallbacks {
   Ball() {
     paint = Paint()..color = Colors.white;
     radius = 10;
@@ -33,7 +32,7 @@ class Ball extends CircleComponent
   static const nudgeSpeed = 300;
 
   @override
-  Future<void>? onLoad() {
+  Future<void> onLoad() {
     _resetBall;
     final hitBox = CircleHitbox(
       radius: radius,
@@ -62,9 +61,7 @@ class Ball extends CircleComponent
     final sideToThrow = math.Random().nextBool();
 
     final random = math.Random().nextDouble();
-    final spawnAngle = sideToThrow
-        ? lerpDouble(-35, 35, random)!
-        : lerpDouble(145, 215, random)!;
+    final spawnAngle = sideToThrow ? lerpDouble(-35, 35, random)! : lerpDouble(145, 215, random)!;
 
     return spawnAngle;
   }

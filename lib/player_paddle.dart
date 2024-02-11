@@ -10,8 +10,7 @@ enum KeyEventEnum {
   none,
 }
 
-class PlayerPaddle extends PositionComponent
-    with HasGameRef<FlameGame>, CollisionCallbacks {
+class PlayerPaddle extends PositionComponent with HasGameRef<FlameGame>, CollisionCallbacks {
   // PlayerPaddle({});
   late final RectangleHitbox paddleHitBox;
   late final RectangleComponent paddle;
@@ -20,7 +19,7 @@ class PlayerPaddle extends PositionComponent
   static const double speed = 400;
 
   @override
-  Future<void>? onLoad() {
+  Future<void> onLoad() async {
     // TODO: implement onLoad
 
     final worldRect = gameRef.size.toRect();
