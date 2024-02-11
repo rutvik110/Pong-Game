@@ -105,18 +105,10 @@ class Ball extends CircleComponent with HasGameRef<PongGame>, CollisionCallbacks
       }
     }
 
-    if (other is PlayerPaddle) {
+    if (other is PlayerPaddle || other is AIPaddle) {
       final paddleRect = other.toAbsoluteRect();
 
       updateBallTrajectory(collisionPoint, paddleRect);
-      _playCollisionAudio;
-    }
-
-    if (other is AIPaddle) {
-      final paddleRect = other.toAbsoluteRect();
-
-      updateBallTrajectory(collisionPoint, paddleRect);
-
       _playCollisionAudio;
     }
   }
