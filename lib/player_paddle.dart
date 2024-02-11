@@ -10,7 +10,7 @@ enum KeyEventEnum {
   none,
 }
 
-class PlayerPaddle extends RectangleComponent with HasGameRef<FlameGame>, CollisionCallbacks {
+class PlayerPaddle extends RectangleComponent with HasGameRef<FlameGame>, CollisionCallbacks, KeyboardHandler {
   // PlayerPaddle({});
   late final RectangleHitbox paddleHitBox;
 
@@ -35,34 +35,6 @@ class PlayerPaddle extends RectangleComponent with HasGameRef<FlameGame>, Collis
       paddleHitBox,
     ]);
 
-    add(
-      KeyboardListenerComponent(
-        keyDown: {
-          LogicalKeyboardKey.arrowDown: (keysPressed) {
-            keyPressed = KeyEventEnum.down;
-
-            return true;
-          },
-          LogicalKeyboardKey.arrowUp: (keysPressed) {
-            keyPressed = KeyEventEnum.up;
-
-            return true;
-          },
-        },
-        keyUp: {
-          LogicalKeyboardKey.arrowDown: (keysPressed) {
-            keyPressed = KeyEventEnum.none;
-
-            return true;
-          },
-          LogicalKeyboardKey.arrowUp: (keysPressed) {
-            keyPressed = KeyEventEnum.none;
-
-            return true;
-          },
-        },
-      ),
-    );
     return super.onLoad();
   }
 
@@ -82,5 +54,28 @@ class PlayerPaddle extends RectangleComponent with HasGameRef<FlameGame>, Collis
         position.y = updatedPosition;
       }
     }
+  }
+
+  @override
+  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        keyPressed = KeyEventEnum.down;
+      }
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        keyPressed = KeyEventEnum.up;
+      }
+    }
+
+    if (event is RawKeyUpEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        keyPressed = KeyEventEnum.none;
+      }
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        keyPressed = KeyEventEnum.none;
+      }
+    }
+
+    return super.onKeyEvent(event, keysPressed);
   }
 }
