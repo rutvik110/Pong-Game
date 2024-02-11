@@ -28,7 +28,6 @@ class Ball extends CircleComponent with HasGameRef<PongGame>, CollisionCallbacks
 
   static const double speed = 500;
   late Vector2 velocity;
-  static const degree = math.pi / 180;
   static const nudgeSpeed = 300;
 
   @override
