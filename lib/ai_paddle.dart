@@ -37,10 +37,12 @@ class AIPaddle extends RectangleComponent with HasGameRef<FlameGame>, CollisionC
 
     if (!isOutOfBounds) {
       if (ball.y > position.y) {
+        // Ball is above paddle. Move down.
         position.y += (400 * dt);
       }
 
       if (ball.y < position.y) {
+        // Ball is below paddle. Move up.
         position.y -= (400 * dt);
       }
     }

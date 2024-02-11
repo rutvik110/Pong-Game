@@ -3,29 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:pong/main.dart';
 
 class ScoreText extends TextComponent with HasGameRef<PongGame> {
-  late int score;
+  ScoreText({
+    required this.isPlayer,
+  }) : super(anchor: isPlayer ? Anchor.topLeft : Anchor.topRight);
 
-  ScoreText.aiScore({
-    this.score = 0,
-  })  : _textPaint = TextPaint(textDirection: TextDirection.ltr),
-        super(
-          anchor: Anchor.center,
-        );
-
-  ScoreText.playerScore({
-    this.score = 0,
-  })  : _textPaint = TextPaint(textDirection: TextDirection.rtl),
-        super(
-          anchor: Anchor.center,
-        );
-
-  late final TextPaint _textPaint;
+  final TextPaint _textPaint = TextPaint();
+  final bool isPlayer;
+  int score = 0;
 
   @override
   Future<void> onLoad() async {
-    score = 0;
-    final textOffset = (_textPaint.textDirection == TextDirection.ltr ? -1 : 1) * 50;
-    position.setValues(gameRef.size.x / 2 + textOffset, gameRef.size.y * 0.1);
+    final textOffset = (isPlayer ? 40 : -40);
+    position = Vector2(gameRef.size.x / 2 + textOffset, 50);
     text = score.toString();
 
     return super.onLoad();

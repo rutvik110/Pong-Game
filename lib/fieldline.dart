@@ -9,12 +9,20 @@ class FieldLine extends Component with HasGameRef<PongGame> {
   void render(Canvas canvas) {
     canvas
       ..save()
-      ..translate(gameRef.size.x / 2 - 10, 10);
+      ..translate(gameRef.size.x / 2, 0);
 
-    for (var i = 0; i < gameRef.size.y / 20; i++) {
-      canvas
-        ..drawRect(Vector2.all(10).toRect(), linePainter)
-        ..translate(0, 20 * 2);
+    for (var i = 0; i < gameRef.size.y / 10; i++) {
+      if (i.isEven) {
+        canvas.drawRect(
+          Rect.fromLTWH(
+            0,
+            (10 * i).toDouble(),
+            10,
+            10,
+          ),
+          linePainter,
+        );
+      }
     }
     canvas.restore();
   }

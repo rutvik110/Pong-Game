@@ -28,8 +28,8 @@ class PongGame extends FlameGame
       [
         ScreenHitbox(),
         FieldLine(),
-        aiPlayer = ScoreText.aiScore(),
-        player = ScoreText.playerScore(),
+        aiPlayer = ScoreText(isPlayer: false),
+        player = ScoreText(isPlayer: true),
         PlayerPaddle(),
         AIPaddle(),
         Ball(),
