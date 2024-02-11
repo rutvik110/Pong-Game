@@ -10,10 +10,9 @@ enum KeyEventEnum {
   none,
 }
 
-class PlayerPaddle extends PositionComponent with HasGameRef<FlameGame>, CollisionCallbacks {
+class PlayerPaddle extends RectangleComponent with HasGameRef<FlameGame>, CollisionCallbacks {
   // PlayerPaddle({});
   late final RectangleHitbox paddleHitBox;
-  late final RectangleComponent paddle;
 
   KeyEventEnum keyPressed = KeyEventEnum.none;
   static const double speed = 400;
@@ -27,16 +26,12 @@ class PlayerPaddle extends PositionComponent with HasGameRef<FlameGame>, Collisi
     size = Vector2(10, 100);
     position.x = worldRect.width * 0.9 - 10;
     position.y = worldRect.height / 2 - size.y / 2;
-    paddle = RectangleComponent(
-      size: size,
-      paint: Paint()..color = Colors.blue,
-    );
+    paint = Paint()..color = Colors.blue;
     paddleHitBox = RectangleHitbox(
       size: size,
     );
 
     addAll([
-      paddle,
       paddleHitBox,
     ]);
 
@@ -77,7 +72,7 @@ class PlayerPaddle extends PositionComponent with HasGameRef<FlameGame>, Collisi
     super.update(dt);
     if (keyPressed == KeyEventEnum.down) {
       final updatedPosition = position.y + speed * dt;
-      if (updatedPosition < gameRef.size.y - paddle.height) {
+      if (updatedPosition < gameRef.size.y - height) {
         position.y = updatedPosition;
       }
     }

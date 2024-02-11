@@ -47,10 +47,10 @@ class Ball extends CircleComponent with HasGameRef<PongGame>, CollisionCallbacks
 
   void get _resetBall {
     position = gameRef.size / 2;
-    final spawnAngle = getSpawnAngle;
+    final spawnAngleInRadian = getSpawnAngle;
 
-    final vx = math.cos(radians(spawnAngle)) * speed;
-    final vy = math.sin(radians(spawnAngle)) * speed;
+    final vx = math.cos(spawnAngleInRadian) * speed;
+    final vy = math.sin(spawnAngleInRadian) * speed;
     velocity = Vector2(
       vx,
       vy,
@@ -63,7 +63,7 @@ class Ball extends CircleComponent with HasGameRef<PongGame>, CollisionCallbacks
     final random = math.Random().nextDouble();
     final spawnAngle = sideToThrow ? lerpDouble(-35, 35, random)! : lerpDouble(145, 215, random)!;
 
-    return spawnAngle;
+    return radians(spawnAngle);
   }
 
   @override
@@ -107,14 +107,14 @@ class Ball extends CircleComponent with HasGameRef<PongGame>, CollisionCallbacks
     }
 
     if (other is PlayerPaddle) {
-      final paddleRect = other.paddle.toAbsoluteRect();
+      final paddleRect = other.toAbsoluteRect();
 
       updateBallTrajectory(collisionPoint, paddleRect);
       _playCollisionAudio;
     }
 
     if (other is AIPaddle) {
-      final paddleRect = other.paddle.toAbsoluteRect();
+      final paddleRect = other.toAbsoluteRect();
 
       updateBallTrajectory(collisionPoint, paddleRect);
 
